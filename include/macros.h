@@ -150,11 +150,11 @@ extern struct GraphicsContext* __gfxCtx;
 
 // __gfxCtx shouldn't be used directly.
 // Use the DISP macros defined above when writing to display buffers.
-#define OPEN_DISPS(gfxCtx)                  \
+#define OPEN_DISPS(gfxCtx, ...)                  \
     {                                       \
         GraphicsContext* __gfxCtx = gfxCtx;
 
-#define CLOSE_DISPS(gfxCtx) \
+#define CLOSE_DISPS(gfxCtx, ...) \
     }
 
 /**
