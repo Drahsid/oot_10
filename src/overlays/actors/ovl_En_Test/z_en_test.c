@@ -125,7 +125,7 @@ static u8 sJointCopyFlags[] = {
     false, // STALFOS_LIMB_WAIST
 };
 
-const ActorInit En_Test_InitVars = {
+ActorInit En_Test_InitVars = {
     ACTOR_EN_TEST,
     ACTORCAT_ENEMY,
     FLAGS,
@@ -663,7 +663,7 @@ void EnTest_WalkAndBlock(EnTest* this, PlayState* play) {
                     EnTest_SetupJumpslash(this);
                     return;
                 }
-            } else if (player->heldItemActionParam != PLAYER_AP_NONE) {
+            } else if (player->heldItemAction != PLAYER_IA_NONE) {
                 if (this->actor.isTargeted) {
                     if ((play->gameplayFrames % 2) != 0) {
                         func_808627C4(this, play);
@@ -1211,7 +1211,7 @@ void func_80862154(EnTest* this) {
     Audio_PlayActorSfx2(&this->actor, NA_SE_EN_STAL_DAMAGE);
     this->unk_7C8 = 8;
     this->actor.speedXZ = -2.0f;
-    Actor_SetColorFilter(&this->actor, 0x4000, 0xFF, 0, 8);
+    Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_RED, 255, COLORFILTER_BUFFLAG_OPA, 8);
     EnTest_SetupAction(this, func_808621D4);
 }
 
@@ -1255,7 +1255,7 @@ void func_80862398(EnTest* this) {
     Audio_PlayActorSfx2(&this->actor, NA_SE_EN_STAL_DAMAGE);
     this->unk_7C8 = 9;
     this->actor.speedXZ = -2.0f;
-    Actor_SetColorFilter(&this->actor, 0x4000, 0xFF, 0, 8);
+    Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_RED, 255, COLORFILTER_BUFFLAG_OPA, 8);
     EnTest_SetupAction(this, func_80862418);
 }
 
@@ -1298,9 +1298,9 @@ void EnTest_SetupStunned(EnTest* this) {
     this->actor.speedXZ = -4.0f;
 
     if (this->lastDamageEffect == STALFOS_DMGEFF_LIGHT) {
-        Actor_SetColorFilter(&this->actor, -0x8000, 0x78, 0, 0x50);
+        Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_GRAY, 120, COLORFILTER_BUFFLAG_OPA, 80);
     } else {
-        Actor_SetColorFilter(&this->actor, 0, 0x78, 0, 0x50);
+        Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_BLUE, 120, COLORFILTER_BUFFLAG_OPA, 80);
 
         if (this->lastDamageEffect == STALFOS_DMGEFF_FREEZE) {
             this->iceTimer = 36;
@@ -1462,7 +1462,7 @@ void func_808628C8(EnTest* this, PlayState* play) {
             if (!EnTest_ReactToProjectile(play, this)) {
                 EnTest_ChooseAction(this, play);
             }
-        } else if (player->heldItemActionParam != PLAYER_AP_NONE) {
+        } else if (player->heldItemAction != PLAYER_IA_NONE) {
             if ((play->gameplayFrames % 2) != 0) {
                 EnTest_SetupIdle(this);
             } else {

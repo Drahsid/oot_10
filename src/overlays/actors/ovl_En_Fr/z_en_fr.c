@@ -1,6 +1,6 @@
 #include "z_en_fr.h"
 #include "assets/objects/gameplay_field_keep/gameplay_field_keep.h"
-#include "vt.h"
+#include "terminal.h"
 #include "assets/objects/object_fr/object_fr.h"
 
 #define FLAGS (ACTOR_FLAG_0 | ACTOR_FLAG_3 | ACTOR_FLAG_4 | ACTOR_FLAG_25)
@@ -133,7 +133,7 @@ static s32 sSongToFrog[] = {
     FROG_PURPLE, FROG_WHITE, FROG_YELLOW, FROG_BLUE, FROG_RED,
 };
 
-const ActorInit En_Fr_InitVars = {
+ActorInit En_Fr_InitVars = {
     ACTOR_EN_FR,
     ACTORCAT_NPC,
     FLAGS,
@@ -838,7 +838,6 @@ s32 EnFr_IsFrogSongComplete(EnFr* this, PlayState* play) {
     if (this->ocarinaNote == (*msgCtx).lastOcarinaButtonIndex) { // required to match, possibly an array?
         this->ocarinaNoteIndex++;
         ocarinaNoteIndex = this->ocarinaNoteIndex;
-        if (1) {}
         if (ocarinaNoteIndex >= 14) { // Frog Song is completed
             this->ocarinaNoteIndex = 13;
             return true;
@@ -1014,7 +1013,7 @@ void EnFr_Deactivate(EnFr* this, PlayState* play) {
         this->actionFunc = EnFr_Idle;
     } else {
         this->actionFunc = EnFr_GiveReward;
-        func_8002F434(&this->actor, play, this->reward, 30.0f, 100.0f);
+        Actor_OfferGetItem(&this->actor, play, this->reward, 30.0f, 100.0f);
     }
 }
 
@@ -1023,7 +1022,7 @@ void EnFr_GiveReward(EnFr* this, PlayState* play) {
         this->actor.parent = NULL;
         this->actionFunc = EnFr_SetIdle;
     } else {
-        func_8002F434(&this->actor, play, this->reward, 30.0f, 100.0f);
+        Actor_OfferGetItem(&this->actor, play, this->reward, 30.0f, 100.0f);
     }
 }
 

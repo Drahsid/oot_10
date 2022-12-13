@@ -52,7 +52,7 @@ typedef enum {
     /* 4 */ REDEAD_GRAB_END
 } EnRdGrabState;
 
-const ActorInit En_Rd_InitVars = {
+ActorInit En_Rd_InitVars = {
     ACTOR_EN_RD,
     ACTORCAT_ENEMY,
     FLAGS,
@@ -363,7 +363,7 @@ void EnRd_WalkToPlayer(EnRd* this, PlayState* play) {
                     player->actor.freezeTimer = 40;
                     func_8008EEAC(play, &this->actor);
                     GET_PLAYER(play)->unk_684 = &this->actor;
-                    func_800AA000(this->actor.xzDistToPlayer, 0xFF, 0x14, 0x96);
+                    Rumble_Request(this->actor.xzDistToPlayer, 255, 20, 150);
                 }
 
                 this->playerStunWaitTimer = 60;
@@ -525,7 +525,7 @@ void EnRd_Grab(EnRd* this, PlayState* play) {
             Animation_PlayLoop(&this->skelAnime, &gGibdoRedeadGrabAttackAnim);
             this->grabState++;
             play->damagePlayer(play, -8);
-            func_800AA000(this->actor.xzDistToPlayer, 0xFF, 1, 0xC);
+            Rumble_Request(this->actor.xzDistToPlayer, 255, 1, 12);
             this->grabDamageTimer = 20;
             FALLTHROUGH;
         case REDEAD_GRAB_START:
@@ -561,7 +561,7 @@ void EnRd_Grab(EnRd* this, PlayState* play) {
             this->grabDamageTimer--;
             if (this->grabDamageTimer == 0) {
                 play->damagePlayer(play, -8);
-                func_800AA000(this->actor.xzDistToPlayer, 0xF0, 1, 0xC);
+                Rumble_Request(this->actor.xzDistToPlayer, 240, 1, 12);
                 this->grabDamageTimer = 20;
                 func_8002F7DC(&player->actor, NA_SE_VO_LI_DAMAGE_S + player->ageProperties->unk_92);
             }
@@ -603,7 +603,7 @@ void EnRd_AttemptPlayerFreeze(EnRd* this, PlayState* play) {
     if (ABS(yaw) < 0x2008) {
         if (!(this->rdFlags & 0x80)) {
             player->actor.freezeTimer = 60;
-            func_800AA000(this->actor.xzDistToPlayer, 0xFF, 0x14, 0x96);
+            Rumble_Request(this->actor.xzDistToPlayer, 255, 20, 150);
             func_8008EEAC(play, &this->actor);
         }
 
@@ -729,12 +729,13 @@ void EnRd_SetupStunned(EnRd* this) {
         this->stunnedBySunsSong = true;
         this->sunsSongStunTimer = 600;
         Audio_PlayActorSfx2(&this->actor, NA_SE_EN_LIGHT_ARROW_HIT);
-        Actor_SetColorFilter(&this->actor, -0x8000, -0x7F38, 0, 0xFF);
+        Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_GRAY, COLORFILTER_INTENSITY_FLAG | 200,
+                             COLORFILTER_BUFFLAG_OPA, 255);
     } else if (this->damageEffect == REDEAD_DMGEFF_HOOKSHOT) {
-        Actor_SetColorFilter(&this->actor, 0, 0xC8, 0, 0x50);
+        Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_BLUE, 200, COLORFILTER_BUFFLAG_OPA, 80);
     } else {
         Audio_PlayActorSfx2(&this->actor, NA_SE_EN_LIGHT_ARROW_HIT);
-        Actor_SetColorFilter(&this->actor, -0x8000, 0xC8, 0, 0x50);
+        Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_GRAY, 200, COLORFILTER_BUFFLAG_OPA, 80);
     }
 
     EnRd_SetupAction(this, EnRd_Stunned);
@@ -744,7 +745,7 @@ void EnRd_Stunned(EnRd* this, PlayState* play) {
     if (this->stunnedBySunsSong && (this->sunsSongStunTimer != 0)) {
         this->sunsSongStunTimer--;
         if (this->sunsSongStunTimer >= 255) {
-            Actor_SetColorFilter(&this->actor, -0x8000, 0xC8, 0, 0xFF);
+            Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_GRAY, 200, COLORFILTER_BUFFLAG_OPA, 255);
         }
 
         if (this->sunsSongStunTimer == 0) {
@@ -818,17 +819,17 @@ void EnRd_UpdateDamage(EnRd* this, PlayState* play) {
                 this->sunsSongStunTimer = 0;
 
                 if (this->damageEffect == REDEAD_DMGEFF_FIRE_MAGIC) {
-                    Actor_SetColorFilter(&this->actor, 0x4000, 0xFF, 0, 0x50);
+                    Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_RED, 255, COLORFILTER_BUFFLAG_OPA, 80);
                     this->fireTimer = 40;
                 } else {
-                    Actor_SetColorFilter(&this->actor, 0x4000, 0xFF, 0, 8);
+                    Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_RED, 255, COLORFILTER_BUFFLAG_OPA, 8);
                 }
 
                 Actor_ApplyDamage(&this->actor);
                 if (this->actor.colChkInfo.health == 0) {
                     EnRd_UpdateMourningTarget(play, &this->actor, true);
                     EnRd_SetupDead(this);
-                    Item_DropCollectibleRandom(play, 0, &this->actor.world.pos, 0x90);
+                    Item_DropCollectibleRandom(play, NULL, &this->actor.world.pos, 0x90);
                 } else {
                     EnRd_SetupDamaged(this);
                 }

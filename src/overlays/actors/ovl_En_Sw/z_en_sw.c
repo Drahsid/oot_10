@@ -20,7 +20,7 @@ void func_80B0D3AC(EnSw* this, PlayState* play);
 void func_80B0DB00(EnSw* this, PlayState* play);
 void func_80B0D878(EnSw* this, PlayState* play);
 
-const ActorInit En_Sw_InitVars = {
+ActorInit En_Sw_InitVars = {
     ACTOR_EN_SW,
     ACTORCAT_NPC,
     FLAGS,
@@ -122,7 +122,7 @@ CollisionPoly* func_80B0C020(PlayState* play, Vec3f* arg1, Vec3f* arg2, Vec3f* a
         return NULL;
     }
 
-    if (SurfaceType_GetWallFlags(&play->colCtx, sp3C, *arg4) & (WALL_FLAG_4 | WALL_FLAG_5)) {
+    if (SurfaceType_GetWallFlags(&play->colCtx, sp3C, *arg4) & WALL_FLAG_CRAWLSPACE) {
         return NULL;
     }
 
@@ -329,7 +329,7 @@ s32 func_80B0C9F0(EnSw* this, PlayState* play) {
         if ((this->collider.base.acFlags & AC_HIT) || phi_v1) {
             this->collider.base.acFlags &= ~AC_HIT;
             this->unk_392 = 0x10;
-            Actor_SetColorFilter(&this->actor, 0x4000, 0xC8, 0, this->unk_392);
+            Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_RED, 200, COLORFILTER_BUFFLAG_OPA, this->unk_392);
             if (Actor_ApplyDamage(&this->actor) != 0) {
                 Audio_PlayActorSfx2(&this->actor, NA_SE_EN_STALTU_DAMAGE);
                 return true;

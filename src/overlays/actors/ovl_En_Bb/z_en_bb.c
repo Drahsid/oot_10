@@ -195,7 +195,7 @@ static DamageTable sDamageTableWhite = {
     /* Unknown 2     */ DMG_ENTRY(0, 0x0),
 };
 
-const ActorInit En_Bb_InitVars = {
+ActorInit En_Bb_InitVars = {
     ACTOR_EN_BB,
     ACTORCAT_ENEMY,
     FLAGS,
@@ -516,7 +516,7 @@ void EnBb_SetupDamage(EnBb* this) {
     if (this->actor.params == ENBB_RED) {
         EnBb_KillFlameTrail(this);
     }
-    Actor_SetColorFilter(&this->actor, 0x4000, 0xFF, 0, 0xC);
+    Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_RED, 255, COLORFILTER_BUFFLAG_OPA, 12);
     this->timer = 5;
     EnBb_SetupAction(this, EnBb_Damage);
 }
@@ -858,7 +858,7 @@ void EnBb_FaceWaypoint(EnBb* this) {
 }
 
 void EnBb_SetWaypoint(EnBb* this, PlayState* play) {
-    Path* path = &play->setupPathList[this->path];
+    Path* path = &play->pathList[this->path];
     Vec3s* point;
 
     if (this->waypoint == (s16)(path->count - 1)) {
@@ -1083,14 +1083,14 @@ void EnBb_SetupStunned(EnBb* this) {
     }
     switch (this->dmgEffect) {
         case 8:
-            Actor_SetColorFilter(&this->actor, -0x8000, 0xC8, 0, 0x50);
+            Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_GRAY, 200, COLORFILTER_BUFFLAG_OPA, 80);
             break;
         case 9:
             this->fireIceTimer = 0x30;
             FALLTHROUGH;
         case 15:
             Audio_PlayActorSfx2(&this->actor, NA_SE_EN_GOMA_JR_FREEZE);
-            Actor_SetColorFilter(&this->actor, 0, 0xB4, 0, 0x50);
+            Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_BLUE, 180, COLORFILTER_BUFFLAG_OPA, 80);
             break;
     }
     this->actor.bgCheckFlags &= ~BGCHECKFLAG_GROUND;
@@ -1205,7 +1205,7 @@ void EnBb_CollisionCheck(EnBb* this, PlayState* play) {
                     //! the bug in EnBb_Draw below to crash the game.
                 } else if ((this->actor.params == ENBB_WHITE) &&
                            ((this->action == BB_WHITE) || (this->action == BB_STUNNED))) {
-                    Actor_SetColorFilter(&this->actor, 0x4000, 0xFF, 0, 0xC);
+                    Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_RED, 255, COLORFILTER_BUFFLAG_OPA, 12);
                     this->actor.speedXZ = -8.0f;
                     this->maxSpeed = 0.0f;
                     this->actor.world.rot.y = this->actor.yawTowardsPlayer;

@@ -8,7 +8,7 @@
 #include "assets/objects/gameplay_keep/gameplay_keep.h"
 #include "assets/objects/object_po_sisters/object_po_sisters.h"
 
-#define FLAGS (ACTOR_FLAG_0 | ACTOR_FLAG_2 | ACTOR_FLAG_4 | ACTOR_FLAG_9 | ACTOR_FLAG_12 | ACTOR_FLAG_14)
+#define FLAGS (ACTOR_FLAG_0 | ACTOR_FLAG_2 | ACTOR_FLAG_4 | ACTOR_FLAG_9 | ACTOR_FLAG_IGNORE_QUAKE | ACTOR_FLAG_14)
 
 void EnPoSisters_Init(Actor* thisx, PlayState* play);
 void EnPoSisters_Destroy(Actor* thisx, PlayState* play);
@@ -61,7 +61,7 @@ static Color_RGBA8 D_80ADD700[4] = {
     { 0, 150, 0, 255 },
 };
 
-const ActorInit En_Po_Sisters_InitVars = {
+ActorInit En_Po_Sisters_InitVars = {
     ACTOR_EN_PO_SISTERS,
     ACTORCAT_ENEMY,
     FLAGS,
@@ -309,7 +309,7 @@ void func_80AD95D8(EnPoSisters* this) {
         this->actor.speedXZ = 10.0f;
     }
     this->unk_199 &= ~0xB;
-    Actor_SetColorFilter(&this->actor, 0x4000, 0xFF, 0, 0x10);
+    Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_RED, 255, COLORFILTER_BUFFLAG_OPA, 16);
     this->actionFunc = func_80ADAAA4;
 }
 

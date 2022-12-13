@@ -99,7 +99,7 @@ static Vec3f sPlatformPositions[] = {
 static s16 D_80B4A1B0 = 0;
 static s16 D_80B4A1B4 = 1;
 
-const ActorInit En_Zf_InitVars = {
+ActorInit En_Zf_InitVars = {
     ACTOR_EN_ZF,
     ACTORCAT_ENEMY,
     FLAGS,
@@ -2005,13 +2005,13 @@ void EnZf_UpdateDamage(EnZf* this, PlayState* play) {
             if ((this->actor.colChkInfo.damageEffect == ENZF_DMGEFF_STUN) ||
                 (this->actor.colChkInfo.damageEffect == ENZF_DMGEFF_ICE)) {
                 if (this->action != ENZF_ACTION_STUNNED) {
-                    Actor_SetColorFilter(&this->actor, 0, 120, 0, 80);
+                    Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_BLUE, 120, COLORFILTER_BUFFLAG_OPA, 80);
                     Actor_ApplyDamage(&this->actor);
                     EnZf_SetupStunned(this);
                 }
             } else {
                 Audio_PlayActorSfx2(&this->actor, NA_SE_EN_RIZA_CRY);
-                Actor_SetColorFilter(&this->actor, 0x4000, 255, 0, 8);
+                Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_RED, 255, COLORFILTER_BUFFLAG_OPA, 8);
 
                 if (Actor_ApplyDamage(&this->actor) == 0) {
                     dropParams = 0x40;
@@ -2249,7 +2249,6 @@ static Gfx D_80B4A2F8[] = {
 void EnZf_Draw(Actor* thisx, PlayState* play) {
     s32 pad;
     EnZf* this = (EnZf*)thisx;
-    ; // Extra ";" required for matching. Cannot be if (1) {} or the like. Typo?
 
     OPEN_DISPS(play->state.gfxCtx, "../z_en_zf.c", 3533);
 

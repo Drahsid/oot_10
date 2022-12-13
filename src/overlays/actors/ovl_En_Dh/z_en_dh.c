@@ -31,7 +31,7 @@ void EnDh_Burrow(EnDh* this, PlayState* play);
 void EnDh_Damage(EnDh* this, PlayState* play);
 void EnDh_Death(EnDh* this, PlayState* play);
 
-const ActorInit En_Dh_InitVars = {
+ActorInit En_Dh_InitVars = {
     ACTOR_EN_DH,
     ACTORCAT_ENEMY,
     FLAGS,
@@ -482,7 +482,7 @@ void EnDh_CollisionCheck(EnDh* this, PlayState* play) {
             if (player->unk_844 != 0) {
                 this->unk_258 = player->unk_845;
             }
-            Actor_SetColorFilter(&this->actor, 0x4000, 0xFF, 0, 8);
+            Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_RED, 255, COLORFILTER_BUFFLAG_OPA, 8);
             lastHealth = this->actor.colChkInfo.health;
             if (Actor_ApplyDamage(&this->actor) == 0) {
                 EnDh_SetupDeath(this);

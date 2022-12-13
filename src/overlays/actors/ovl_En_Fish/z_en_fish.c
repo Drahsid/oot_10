@@ -6,7 +6,7 @@
 
 #include "z_en_fish.h"
 #include "assets/objects/gameplay_keep/gameplay_keep.h"
-#include "vt.h"
+#include "terminal.h"
 
 #define FLAGS 0
 
@@ -64,7 +64,7 @@ static ColliderJntSphInit sJntSphInit = {
     sJntSphElementsInit,
 };
 
-const ActorInit En_Fish_InitVars = {
+ActorInit En_Fish_InitVars = {
     ACTOR_EN_FISH,
     ACTORCAT_ITEMACTION,
     FLAGS,
@@ -710,7 +710,7 @@ void EnFish_OrdinaryUpdate(EnFish* this, PlayState* play) {
             EnFish_BeginRespawn(this);
         } else if (EnFish_InBottleRange(this, play)) {
             // GI_MAX in this case allows the player to catch the actor in a bottle
-            func_8002F434(&this->actor, play, GI_MAX, 80.0f, 20.0f);
+            Actor_OfferGetItem(&this->actor, play, GI_MAX, 80.0f, 20.0f);
         }
     }
 }

@@ -22,7 +22,7 @@ void ObjKibako_Held(ObjKibako* this, PlayState* play);
 void ObjKibako_SetupThrown(ObjKibako* this);
 void ObjKibako_Thrown(ObjKibako* this, PlayState* play);
 
-const ActorInit Obj_Kibako_InitVars = {
+ActorInit Obj_Kibako_InitVars = {
     ACTOR_OBJ_KIBAKO,
     ACTORCAT_PROP,
     FLAGS,
@@ -211,7 +211,7 @@ void ObjKibako_Idle(ObjKibako* this, PlayState* play) {
             }
         }
         if (this->actor.xzDistToPlayer < 100.0f) {
-            func_8002F580(&this->actor, play);
+            Actor_OfferCarry(&this->actor, play);
         }
     }
 }

@@ -7,7 +7,7 @@
 #include "z_en_tite.h"
 #include "overlays/actors/ovl_En_Encount1/z_en_encount1.h"
 #include "overlays/effects/ovl_Effect_Ss_Dead_Sound/z_eff_ss_dead_sound.h"
-#include "vt.h"
+#include "terminal.h"
 #include "assets/objects/object_tite/object_tite.h"
 
 #define FLAGS (ACTOR_FLAG_0 | ACTOR_FLAG_2 | ACTOR_FLAG_4)
@@ -74,7 +74,7 @@ void EnTite_FallApart(EnTite* this, PlayState* play);
 void EnTite_FlipOnBack(EnTite* this, PlayState* play);
 void EnTite_FlipUpright(EnTite* this, PlayState* play);
 
-const ActorInit En_Tite_InitVars = {
+ActorInit En_Tite_InitVars = {
     ACTOR_EN_TITE,
     ACTORCAT_ENEMY,
     FLAGS,
@@ -856,14 +856,14 @@ void EnTite_CheckDamage(Actor* thisx, PlayState* play) {
             // Stun if Tektite hit by nut, boomerang, hookshot, ice arrow or ice magic
             if ((thisx->colChkInfo.damageEffect == 1) || (thisx->colChkInfo.damageEffect == 0xF)) {
                 if (this->action != TEKTITE_STUNNED) {
-                    Actor_SetColorFilter(thisx, 0, 0x78, 0, 0x50);
+                    Actor_SetColorFilter(thisx, COLORFILTER_COLORFLAG_BLUE, 120, COLORFILTER_BUFFLAG_OPA, 80);
                     Actor_ApplyDamage(thisx);
                     EnTite_SetupStunned(this);
                 }
                 // Otherwise apply damage and handle death where necessary
             } else {
                 if ((thisx->colorFilterTimer == 0) || ((thisx->colorFilterParams & 0x4000) == 0)) {
-                    Actor_SetColorFilter(thisx, 0x4000, 0xFF, 0, 8);
+                    Actor_SetColorFilter(thisx, COLORFILTER_COLORFLAG_RED, 255, COLORFILTER_BUFFLAG_OPA, 8);
                     Actor_ApplyDamage(thisx);
                 }
                 if (thisx->colChkInfo.health == 0) {

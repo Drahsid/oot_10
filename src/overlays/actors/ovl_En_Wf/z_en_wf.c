@@ -5,7 +5,7 @@
  */
 
 #include "z_en_wf.h"
-#include "vt.h"
+#include "terminal.h"
 #include "overlays/actors/ovl_En_Encount1/z_en_encount1.h"
 #include "assets/objects/object_wf/object_wf.h"
 
@@ -187,7 +187,7 @@ static DamageTable sDamageTable = {
     /* Unknown 2     */ DMG_ENTRY(0, ENWF_DMGEFF_NONE),
 };
 
-const ActorInit En_Wf_InitVars = {
+ActorInit En_Wf_InitVars = {
     ACTOR_EN_WF,
     ACTORCAT_ENEMY,
     FLAGS,
@@ -1272,12 +1272,13 @@ void EnWf_UpdateDamage(EnWf* this, PlayState* play) {
                 if ((this->actor.colChkInfo.damageEffect == ENWF_DMGEFF_STUN) ||
                     (this->actor.colChkInfo.damageEffect == ENWF_DMGEFF_UNDEF)) {
                     if (this->action != WOLFOS_ACTION_STUNNED) {
-                        Actor_SetColorFilter(&this->actor, 0, 120, 0, 80);
+                        Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_BLUE, 120, COLORFILTER_BUFFLAG_OPA,
+                                             80);
                         Actor_ApplyDamage(&this->actor);
                         EnWf_SetupStunned(this);
                     }
                 } else { // LIGHT_MAGIC, FIRE, NONE
-                    Actor_SetColorFilter(&this->actor, 0x4000, 255, 0, 8);
+                    Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_RED, 255, COLORFILTER_BUFFLAG_OPA, 8);
 
                     if (this->damageEffect == ENWF_DMGEFF_FIRE) {
                         this->fireTimer = 40;

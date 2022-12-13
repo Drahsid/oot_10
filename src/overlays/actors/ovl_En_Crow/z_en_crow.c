@@ -1,7 +1,7 @@
 #include "z_en_crow.h"
 #include "assets/objects/object_crow/object_crow.h"
 
-#define FLAGS (ACTOR_FLAG_0 | ACTOR_FLAG_2 | ACTOR_FLAG_12 | ACTOR_FLAG_14)
+#define FLAGS (ACTOR_FLAG_0 | ACTOR_FLAG_2 | ACTOR_FLAG_IGNORE_QUAKE | ACTOR_FLAG_14)
 
 void EnCrow_Init(Actor* thisx, PlayState* play);
 void EnCrow_Destroy(Actor* thisx, PlayState* play);
@@ -18,7 +18,7 @@ void EnCrow_Damaged(EnCrow* this, PlayState* play);
 
 static Vec3f sZeroVecAccel = { 0.0f, 0.0f, 0.0f };
 
-const ActorInit En_Crow_InitVars = {
+ActorInit En_Crow_InitVars = {
     ACTOR_EN_CROW,
     ACTORCAT_ENEMY,
     FLAGS,
@@ -157,7 +157,7 @@ void EnCrow_SetupDamaged(EnCrow* this, PlayState* play) {
     Audio_PlayActorSfx2(&this->actor, NA_SE_EN_KAICHO_DEAD);
 
     if (this->actor.colChkInfo.damageEffect == 3) { // Ice arrows
-        Actor_SetColorFilter(&this->actor, 0, 255, 0, 40);
+        Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_BLUE, 255, COLORFILTER_BUFFLAG_OPA, 40);
         for (i = 0; i < 8; i++) {
             iceParticlePos.x = ((i & 1 ? 7.0f : -7.0f) * scale) + this->actor.world.pos.x;
             iceParticlePos.y = ((i & 2 ? 7.0f : -7.0f) * scale) + this->actor.world.pos.y;
@@ -166,13 +166,13 @@ void EnCrow_SetupDamaged(EnCrow* this, PlayState* play) {
                                            ((Rand_ZeroOne() * 0.15f) + 0.85f) * scale);
         }
     } else if (this->actor.colChkInfo.damageEffect == 2) { // Fire arrows and Din's Fire
-        Actor_SetColorFilter(&this->actor, 0x4000, 255, 0, 40);
+        Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_RED, 255, COLORFILTER_BUFFLAG_OPA, 40);
 
         for (i = 0; i < 4; i++) {
             EffectSsEnFire_SpawnVec3f(play, &this->actor, &this->actor.world.pos, 50.0f * scale, 0, 0, i);
         }
     } else {
-        Actor_SetColorFilter(&this->actor, 0x4000, 255, 0, 40);
+        Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_RED, 255, COLORFILTER_BUFFLAG_OPA, 40);
     }
 
     if (this->actor.flags & ACTOR_FLAG_15) {
@@ -196,7 +196,7 @@ void EnCrow_SetupTurnAway(EnCrow* this) {
     this->aimRotX = -0x1000;
     this->aimRotY = this->actor.yawTowardsPlayer + 0x8000;
     this->skelAnime.playSpeed = 2.0f;
-    Actor_SetColorFilter(&this->actor, 0, 255, 0, 5);
+    Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_BLUE, 255, COLORFILTER_BUFFLAG_OPA, 5);
     Audio_PlayActorSfx2(&this->actor, NA_SE_EN_GOMA_JR_FREEZE);
     this->actionFunc = EnCrow_TurnAway;
 }

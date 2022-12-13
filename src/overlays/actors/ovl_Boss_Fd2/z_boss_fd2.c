@@ -8,7 +8,7 @@
 #include "assets/objects/object_fd2/object_fd2.h"
 #include "overlays/actors/ovl_Boss_Fd/z_boss_fd.h"
 #include "overlays/actors/ovl_Door_Warp1/z_door_warp1.h"
-#include "vt.h"
+#include "terminal.h"
 
 #define FLAGS (ACTOR_FLAG_0 | ACTOR_FLAG_2 | ACTOR_FLAG_4 | ACTOR_FLAG_5)
 
@@ -46,7 +46,7 @@ void BossFd2_Damaged(BossFd2* this, PlayState* play);
 void BossFd2_Death(BossFd2* this, PlayState* play);
 void BossFd2_Wait(BossFd2* this, PlayState* play);
 
-const ActorInit Boss_Fd2_InitVars = {
+ActorInit Boss_Fd2_InitVars = {
     ACTOR_BOSS_FD2,
     ACTORCAT_BOSS,
     FLAGS,
@@ -58,7 +58,7 @@ const ActorInit Boss_Fd2_InitVars = {
     (ActorFunc)BossFd2_Draw,
 };
 
-#include "z_boss_fd2_colchk.c"
+#include "z_boss_fd2_colchk.inc.c"
 
 static Vec3f sHoleLocations[] = {
     { 0.0f, 90.0f, -243.0f },    { 0.0f, 90.0f, 0.0f },    { 0.0f, 90.0f, 243.0f },
@@ -243,7 +243,7 @@ void BossFd2_Emerge(BossFd2* this, PlayState* play) {
                 bossFd->faceExposed = 0;
                 bossFd->holePosition.x = this->actor.world.pos.x;
                 bossFd->holePosition.z = this->actor.world.pos.z;
-                func_80033E1C(play, 1, 0x32, 0x5000);
+                Actor_RequestQuakeWithSpeed(play, 1, 50, 0x5000);
                 this->work[FD2_ACTION_STATE] = 1;
                 this->work[FD2_HOLE_COUNTER]++;
                 this->actor.world.pos.y = -200.0f;
@@ -653,7 +653,7 @@ void BossFd2_Death(BossFd2* this, PlayState* play) {
         case DEATH_START:
             this->deathState = DEATH_RETREAT;
             func_80064520(play, &play->csCtx);
-            func_8002DF54(play, &this->actor, 1);
+            func_8002DF54(play, &this->actor, PLAYER_CSMODE_1);
             this->subCamId = Play_CreateSubCamera(play);
             Play_ChangeCameraStatus(play, CAM_ID_MAIN, CAM_STAT_WAIT);
             Play_ChangeCameraStatus(play, this->subCamId, CAM_STAT_ACTIVE);
@@ -747,7 +747,7 @@ void BossFd2_Death(BossFd2* this, PlayState* play) {
                     this->work[FD2_ACTION_STATE]++;
                     this->subCamVelFactor = 0.0f;
                     this->subCamAccel = 0.02f;
-                    func_8002DF54(play, &bossFd->actor, 1);
+                    func_8002DF54(play, &bossFd->actor, PLAYER_CSMODE_1);
                 }
             }
             if ((bossFd->work[BFD_ACTION_STATE] == BOSSFD_BONES_FALL) && (bossFd->timers[0] == 5)) {
@@ -781,7 +781,7 @@ void BossFd2_Death(BossFd2* this, PlayState* play) {
                 func_800C08AC(play, this->subCamId, 0);
                 this->subCamId = SUB_CAM_ID_DONE;
                 func_80064534(play, &play->csCtx);
-                func_8002DF54(play, &this->actor, 7);
+                func_8002DF54(play, &this->actor, PLAYER_CSMODE_7);
                 Actor_SpawnAsChild(&play->actorCtx, &this->actor, play, ACTOR_DOOR_WARP1, 0.0f, 100.0f, 0.0f, 0, 0, 0,
                                    WARP_DUNGEON_ADULT);
                 Flags_SetClear(play, play->roomCtx.curRoom.num);
@@ -884,7 +884,7 @@ void BossFd2_CollisionCheck(BossFd2* this, PlayState* play) {
                 BossFd2_SetupDeath(this, play);
                 this->work[FD2_DAMAGE_FLASH_TIMER] = 10;
                 this->work[FD2_INVINC_TIMER] = 30000;
-                Audio_QueueSeqCmd(0x1 << 28 | SEQ_PLAYER_BGM_MAIN << 24 | 0x100FF);
+                SEQCMD_STOP_SEQUENCE(SEQ_PLAYER_BGM_MAIN, 1);
                 Audio_PlayActorSfx2(&this->actor, NA_SE_EN_VALVAISA_DEAD);
                 Enemy_StartFinishingBlow(play, &this->actor);
             } else if (damage) {

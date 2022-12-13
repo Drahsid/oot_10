@@ -23,7 +23,7 @@ void EnBa_RecoilFromDamage(EnBa* this, PlayState* play);
 void EnBa_Die(EnBa* this, PlayState* play);
 void EnBa_SetupSwingAtPlayer(EnBa* this);
 
-const ActorInit En_Ba_InitVars = {
+ActorInit En_Ba_InitVars = {
     ACTOR_EN_BA,
     ACTORCAT_ENEMY,
     FLAGS,
@@ -325,7 +325,7 @@ void func_809B7174(EnBa* this) {
     this->actor.colChkInfo.mass = MASS_IMMOVABLE;
     this->actor.speedXZ = 10.0f;
     Audio_PlayActorSfx2(&this->actor, NA_SE_EN_BALINADE_HAND_DAMAGE);
-    Actor_SetColorFilter(&this->actor, 0x4000, 255, 0, 12);
+    Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_RED, 255, COLORFILTER_BUFFLAG_OPA, 12);
     EnBa_SetupAction(this, EnBa_RecoilFromDamage);
 }
 

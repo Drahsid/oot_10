@@ -5,7 +5,7 @@
  */
 
 #include "z_en_insect.h"
-#include "vt.h"
+#include "terminal.h"
 #include "assets/objects/gameplay_keep/gameplay_keep.h"
 
 #define FLAGS 0
@@ -42,7 +42,7 @@ static s16 sCaughtCount = 0;
  */
 static s16 sDroppedCount = 0;
 
-const ActorInit En_Insect_InitVars = {
+ActorInit En_Insect_InitVars = {
     ACTOR_EN_INSECT,
     ACTORCAT_ITEMACTION,
     FLAGS,
@@ -779,7 +779,7 @@ void EnInsect_Update(Actor* thisx, PlayState* play) {
             if (!(this->insectFlags & INSECT_FLAG_UNCATCHABLE) && sCaughtCount < 4 &&
                 EnInsect_InBottleRange(this, play) &&
                 // GI_MAX in this case allows the player to catch the actor in a bottle
-                func_8002F434(&this->actor, play, GI_MAX, 60.0f, 30.0f)) {
+                Actor_OfferGetItem(&this->actor, play, GI_MAX, 60.0f, 30.0f)) {
                 sCaughtCount++;
             }
         }

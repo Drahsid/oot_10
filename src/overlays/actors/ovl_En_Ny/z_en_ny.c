@@ -23,7 +23,7 @@ void EnNy_SetupDie(EnNy* this, PlayState* play);
 void EnNy_DrawDeathEffect(Actor* thisx, PlayState* play);
 void func_80ABD3B8(EnNy* this, f32, f32);
 
-const ActorInit En_Ny_InitVars = {
+ActorInit En_Ny_InitVars = {
     ACTOR_EN_NY,
     ACTORCAT_ENEMY,
     FLAGS,
@@ -315,16 +315,16 @@ s32 EnNy_CollisionCheck(EnNy* this, PlayState* play) {
                         FALLTHROUGH;
                     case 0xF:
                         Actor_ApplyDamage(&this->actor);
-                        Actor_SetColorFilter(&this->actor, 0x4000, 0xFF, 0x2000, 0x50);
+                        Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_RED, 255, COLORFILTER_BUFFLAG_XLU, 80);
                         break;
                     case 1:
                         Actor_ApplyDamage(&this->actor);
-                        Actor_SetColorFilter(&this->actor, 0x4000, 0xFF, 0x2000, 0x50);
+                        Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_RED, 255, COLORFILTER_BUFFLAG_XLU, 80);
                         break;
                     case 2:
                         this->unk_1CA = 4;
                         Actor_ApplyDamage(&this->actor);
-                        Actor_SetColorFilter(&this->actor, 0x4000, 0xFF, 0x2000, 0x50);
+                        Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_RED, 255, COLORFILTER_BUFFLAG_XLU, 80);
                         break;
                 }
             }

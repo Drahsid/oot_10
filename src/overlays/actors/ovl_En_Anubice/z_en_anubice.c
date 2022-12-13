@@ -8,7 +8,7 @@
 #include "assets/objects/object_anubice/object_anubice.h"
 #include "overlays/actors/ovl_En_Anubice_Tag/z_en_anubice_tag.h"
 #include "overlays/actors/ovl_Bg_Hidan_Curtain/z_bg_hidan_curtain.h"
-#include "vt.h"
+#include "terminal.h"
 
 #define FLAGS (ACTOR_FLAG_0 | ACTOR_FLAG_2 | ACTOR_FLAG_4)
 
@@ -25,7 +25,7 @@ void EnAnubice_SetupShootFireball(EnAnubice* this, PlayState* play);
 void EnAnubice_ShootFireball(EnAnubice* this, PlayState* play);
 void EnAnubice_Die(EnAnubice* this, PlayState* play);
 
-const ActorInit En_Anubice_InitVars = {
+ActorInit En_Anubice_InitVars = {
     ACTOR_EN_ANUBICE,
     ACTORCAT_ENEMY,
     FLAGS,
@@ -344,7 +344,7 @@ void EnAnubice_Die(EnAnubice* this, PlayState* play) {
     rotatedFireEffectPos.x += this->actor.world.pos.x + Rand_CenteredFloat(40.0f);
     rotatedFireEffectPos.y += this->actor.world.pos.y + Rand_CenteredFloat(40.0f);
     rotatedFireEffectPos.z += this->actor.world.pos.z + Rand_CenteredFloat(30.0f);
-    Actor_SetColorFilter(&this->actor, 0x4000, 128, 0, 8);
+    Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_RED, 128, COLORFILTER_BUFFLAG_OPA, 8);
     EffectSsEnFire_SpawnVec3f(play, &this->actor, &rotatedFireEffectPos, 100, 0, 0, -1);
 
     if ((this->animLastFrame <= curFrame) && (this->actor.bgCheckFlags & BGCHECKFLAG_GROUND)) {

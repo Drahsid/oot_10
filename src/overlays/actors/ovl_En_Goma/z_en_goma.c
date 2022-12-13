@@ -42,7 +42,7 @@ void EnGoma_SetupLand(EnGoma* this);
 void EnGoma_SetupJump(EnGoma* this);
 void EnGoma_SetupStunned(EnGoma* this, PlayState* play);
 
-const ActorInit En_Goma_InitVars = {
+ActorInit En_Goma_InitVars = {
     ACTOR_BOSS_GOMA,
     ACTORCAT_ENEMY,
     FLAGS,
@@ -561,7 +561,7 @@ void EnGoma_SetupStunned(EnGoma* this, PlayState* play) {
 }
 
 void EnGoma_Stunned(EnGoma* this, PlayState* play) {
-    Actor_SetColorFilter(&this->actor, 0, 180, 0, 2);
+    Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_BLUE, 180, COLORFILTER_BUFFLAG_OPA, 2);
     this->visualState = 2;
 
     if (this->actionTimer != 0) {
@@ -652,7 +652,7 @@ void EnGoma_UpdateHit(EnGoma* this, PlayState* play) {
 
                     this->actor.colChkInfo.health -= swordDamage;
                     EnGoma_SetupHurt(this, play);
-                    Actor_SetColorFilter(&this->actor, 0x4000, 255, 0, 5);
+                    Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_RED, 255, COLORFILTER_BUFFLAG_OPA, 5);
                     this->hurtTimer = 13;
                 }
             } else {
@@ -791,7 +791,7 @@ void EnGoma_Draw(Actor* thisx, PlayState* play) {
             this->actor.naviEnemyId = NAVI_ENEMY_GOHMA_LARVA;
             Matrix_Translate(this->actor.world.pos.x,
                              this->actor.world.pos.y +
-                                 ((this->actor.shape.yOffset * this->actor.scale.y) + play->mainCamera.skyboxOffset.y),
+                                 ((this->actor.shape.yOffset * this->actor.scale.y) + play->mainCamera.quakeOffset.y),
                              this->actor.world.pos.z, MTXMODE_NEW);
             Matrix_RotateX(BINANG_TO_RAD_ALT(this->slopePitch), MTXMODE_APPLY);
             Matrix_RotateZ(BINANG_TO_RAD_ALT(this->slopeRoll), MTXMODE_APPLY);

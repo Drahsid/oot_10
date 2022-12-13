@@ -6,7 +6,7 @@
 
 #include "z_en_rr.h"
 #include "assets/objects/object_rr/object_rr.h"
-#include "vt.h"
+#include "terminal.h"
 
 #define FLAGS (ACTOR_FLAG_0 | ACTOR_FLAG_2 | ACTOR_FLAG_4 | ACTOR_FLAG_5 | ACTOR_FLAG_10)
 
@@ -64,7 +64,7 @@ void EnRr_Death(EnRr* this, PlayState* play);
 void EnRr_Retreat(EnRr* this, PlayState* play);
 void EnRr_Stunned(EnRr* this, PlayState* play);
 
-const ActorInit En_Rr_InitVars = {
+ActorInit En_Rr_InitVars = {
     ACTOR_EN_RR,
     ACTORCAT_ENEMY,
     FLAGS,
@@ -453,7 +453,8 @@ void EnRr_CollisionCheck(EnRr* this, PlayState* play) {
                     this->stopScroll = false;
                     Actor_ApplyDamage(&this->actor);
                     this->invincibilityTimer = 40;
-                    Actor_SetColorFilter(&this->actor, 0x4000, 0xFF, 0x2000, this->invincibilityTimer);
+                    Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_RED, 255, COLORFILTER_BUFFLAG_XLU,
+                                         this->invincibilityTimer);
                     if (this->hasPlayer) {
                         EnRr_SetupReleasePlayer(this, play);
                     } else if (this->actor.colChkInfo.health != 0) {
@@ -468,7 +469,7 @@ void EnRr_CollisionCheck(EnRr* this, PlayState* play) {
                     if (this->actor.colChkInfo.health == 0) {
                         this->dropType = RR_DROP_RANDOM_RUPEE;
                     }
-                    Actor_SetColorFilter(&this->actor, 0x4000, 0xFF, 0x2000, 0x50);
+                    Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_RED, 255, COLORFILTER_BUFFLAG_XLU, 80);
                     this->effectTimer = 20;
                     EnRr_SetupStunned(this);
                     return;
@@ -479,7 +480,8 @@ void EnRr_CollisionCheck(EnRr* this, PlayState* play) {
                     }
                     if (this->actor.colorFilterTimer == 0) {
                         this->effectTimer = 20;
-                        Actor_SetColorFilter(&this->actor, 0, 0xFF, 0x2000, 0x50);
+                        Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_BLUE, 255, COLORFILTER_BUFFLAG_XLU,
+                                             80);
                     }
                     EnRr_SetupStunned(this);
                     return;
@@ -488,12 +490,12 @@ void EnRr_CollisionCheck(EnRr* this, PlayState* play) {
                     if (this->actor.colChkInfo.health == 0) {
                         this->dropType = RR_DROP_RUPEE_RED;
                     }
-                    Actor_SetColorFilter(&this->actor, -0x8000, 0xFF, 0x2000, 0x50);
+                    Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_GRAY, 255, COLORFILTER_BUFFLAG_XLU, 80);
                     EnRr_SetupStunned(this);
                     return;
                 case RR_DMG_STUN: // Boomerang and Hookshot
                     Audio_PlayActorSfx2(&this->actor, NA_SE_EN_GOMA_JR_FREEZE);
-                    Actor_SetColorFilter(&this->actor, 0, 0xFF, 0x2000, 0x50);
+                    Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_BLUE, 255, COLORFILTER_BUFFLAG_XLU, 80);
                     EnRr_SetupStunned(this);
                     return;
             }
@@ -622,7 +624,7 @@ void EnRr_Reach(EnRr* this, PlayState* play) {
 void EnRr_GrabPlayer(EnRr* this, PlayState* play) {
     Player* player = GET_PLAYER(play);
 
-    func_800AA000(this->actor.xyzDistToPlayerSq, 120, 2, 120);
+    Rumble_Request(this->actor.xyzDistToPlayerSq, 120, 2, 120);
     if ((this->frameCount % 8) == 0) {
         Audio_PlayActorSfx2(&this->actor, NA_SE_EN_LIKE_EAT);
     }

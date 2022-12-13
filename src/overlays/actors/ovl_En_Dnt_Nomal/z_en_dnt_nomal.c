@@ -11,7 +11,7 @@
 #include "overlays/actors/ovl_En_Ex_Item/z_en_ex_item.h"
 #include "overlays/effects/ovl_Effect_Ss_Hahen/z_eff_ss_hahen.h"
 #include "assets/objects/object_hintnuts/object_hintnuts.h"
-#include "vt.h"
+#include "terminal.h"
 
 #define FLAGS (ACTOR_FLAG_4 | ACTOR_FLAG_5)
 
@@ -56,7 +56,7 @@ void EnDntNomal_StageAttackHide(EnDntNomal* this, PlayState* play);
 void EnDntNomal_StageAttack(EnDntNomal* this, PlayState* play);
 void EnDntNomal_StageReturn(EnDntNomal* this, PlayState* play);
 
-const ActorInit En_Dnt_Nomal_InitVars = {
+ActorInit En_Dnt_Nomal_InitVars = {
     ACTOR_EN_DNT_NOMAL,
     ACTORCAT_PROP,
     FLAGS,
@@ -250,7 +250,7 @@ void EnDntNomal_TargetWait(EnDntNomal* this, PlayState* play) {
                 this->hitCounter++;
                 if (this->hitCounter >= 3) {
                     OnePointCutscene_Init(play, 4140, -99, &this->actor, CAM_ID_MAIN);
-                    func_8002DF54(play, &this->actor, 1);
+                    func_8002DF54(play, &this->actor, PLAYER_CSMODE_1);
                     this->timer4 = 50;
                     this->actionFunc = EnDntNomal_SetupTargetUnburrow;
                 }
@@ -339,7 +339,7 @@ void EnDntNomal_TargetTalk(EnDntNomal* this, PlayState* play) {
         Message_CloseTextbox(play);
         func_8005B1A4(GET_ACTIVE_CAM(play));
         GET_ACTIVE_CAM(play)->csId = 0;
-        func_8002DF54(play, NULL, 8);
+        func_8002DF54(play, NULL, PLAYER_CSMODE_8);
         this->actionFunc = EnDntNomal_SetupTargetGivePrize;
     }
 }
@@ -361,7 +361,7 @@ void EnDntNomal_TargetGivePrize(EnDntNomal* this, PlayState* play) {
 
         if (Actor_SpawnAsChild(&play->actorCtx, &this->actor, play, ACTOR_EN_EX_ITEM, itemX, itemY, itemZ, 0, 0, 0,
                                EXITEM_BULLET_BAG) == NULL) {
-            func_8002DF54(play, NULL, 7);
+            func_8002DF54(play, NULL, PLAYER_CSMODE_7);
             Actor_Kill(&this->actor);
         }
         this->spawnedItem = true;

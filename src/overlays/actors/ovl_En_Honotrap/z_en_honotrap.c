@@ -47,7 +47,7 @@ void EnHonotrap_FlameChase(EnHonotrap* this, PlayState* play);
 void EnHonotrap_SetupFlameVanish(EnHonotrap* this);
 void EnHonotrap_FlameVanish(EnHonotrap* this, PlayState* play);
 
-const ActorInit En_Honotrap_InitVars = {
+ActorInit En_Honotrap_InitVars = {
     ACTOR_EN_HONOTRAP,
     ACTORCAT_PROP,
     FLAGS,
@@ -246,7 +246,7 @@ void EnHonotrap_EyeIdle(EnHonotrap* this, PlayState* play) {
 
 void EnHonotrap_SetupEyeOpen(EnHonotrap* this) {
     this->actionFunc = EnHonotrap_EyeOpen;
-    Actor_SetColorFilter(&this->actor, 0x4000, 0xFF, 0, 0x28);
+    Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_RED, 255, COLORFILTER_BUFFLAG_OPA, 40);
     this->timer = 30;
     Audio_PlayActorSfx2(&this->actor, NA_SE_EV_RED_EYE);
 }

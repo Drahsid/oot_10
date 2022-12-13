@@ -26,7 +26,7 @@ void BgBreakwall_WaitForObject(BgBreakwall* this, PlayState* play);
 void BgBreakwall_Wait(BgBreakwall* this, PlayState* play);
 void BgBreakwall_LavaCoverMove(BgBreakwall* this, PlayState* play);
 
-const ActorInit Bg_Breakwall_InitVars = {
+ActorInit Bg_Breakwall_InitVars = {
     ACTOR_BG_BREAKWALL,
     ACTORCAT_BG,
     FLAGS,
@@ -82,7 +82,7 @@ void BgBreakwall_Init(Actor* thisx, PlayState* play) {
     s32 wallType = ((this->dyna.actor.params >> 13) & 3) & 0xFF;
 
     Actor_ProcessInitChain(&this->dyna.actor, sInitChain);
-    DynaPolyActor_Init(&this->dyna, DPM_UNK);
+    DynaPolyActor_Init(&this->dyna, 0);
     this->bombableWallDList = sBombableWallInfo[wallType].dList;
     this->colType = sBombableWallInfo[wallType].colType;
 
@@ -254,7 +254,7 @@ void BgBreakwall_Wait(BgBreakwall* this, PlayState* play) {
             gSaveContext.cutsceneTrigger = 1;
             Audio_PlaySfxGeneral(NA_SE_SY_CORRECT_CHIME, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
                                  &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
-            func_8002DF54(play, NULL, 0x31);
+            func_8002DF54(play, NULL, PLAYER_CSMODE_49);
         }
 
         if (this->dyna.actor.params < 0) {
